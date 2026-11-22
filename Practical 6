@@ -1,0 +1,60 @@
+
+# Map Coloring Problem using Backtracking
+
+# Define the map as a graph
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'C', 'D'],
+    'C': ['A', 'B', 'D'],
+    'D': ['B', 'C']
+}
+
+# Available colors
+colors = ['Red', 'Green', 'Blue']
+
+# Store assigned colors
+color_assignment = {}
+
+# Check whether assigning a color is consistent
+def is_safe(region, color):
+    for neighbor in graph[region]:
+        if neighbor in color_assignment:
+            if color_assignment[neighbor] == color:
+                return False
+    return True
+
+# Backtracking algorithm
+def solve_map_coloring(regions):
+    if len(color_assignment) == len(regions):
+        return True
+
+    # Select the next uncolored region
+    region = regions[len(color_assignment)]
+
+    # Try each available color
+    for color in colors:
+        if is_safe(region, color):
+            color_assignment[region] = color
+
+            # Recursively solve remaining regions
+            if solve_map_coloring(regions):
+                return True
+
+            # Backtrack
+            del color_assignment[region]
+
+    return False
+
+
+# Main program
+regions = list(graph.keys())
+
+print("MAP COLORING PROBLEM")
+print("--------------------")
+
+if solve_map_coloring(regions):
+    print("Solution Found:")
+    for region, color in color_assignment.items():
+        print(region, ":", color)
+else:
+    print("No solution exists.")
